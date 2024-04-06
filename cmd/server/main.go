@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/richhh7g/mm-api-nfe/pkg/environment"
+	"github.com/richhh7g/mm-api-nfe/internal/infra/environment"
 )
 
 func init() {
