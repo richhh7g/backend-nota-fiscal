@@ -35,7 +35,7 @@ tasks:
     silent: true
   migration:rollback:
     desc: Rollback migrations
-    cmd: migrate --path=$(CLIENT_PATH)/database/sqlc_pg/migration --database "$DATABASE_URL" down {{.CLI_ARGS}}
+    cmd: migrate --path="{{.CLIENT_PATH}}/database/sqlc_pg/migration" --database "$DATABASE_URL" down {{.CLI_ARGS}}
     silent: true
 
   compose:local:
