@@ -1,0 +1,11 @@
+version: "2"
+sql:
+  - schema: "internal/infra/data/client/database/sqlc_pg/migration"
+    engine: "postgresql"
+    queries: "internal/infra/data/repository/**/*.sql"
+    gen:
+      go:
+          out: "internal/infra/data/client/database/sqlc_pg"
+          package: "sqlc_pg"
+          output_db_file_name: "database.client.go"
+          output_models_file_name: "schema.generated.go"

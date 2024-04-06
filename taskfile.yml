@@ -1,10 +1,15 @@
 version: 3
+
+vars:
+  CLIENT_PATH: internal/infra/data/client
+
+dotenv: ['.env', '.env.test']
+
 tasks:
   build:
     desc: Build the application
     aliases: [b]
-    cmds:
-      - go build -o bin/server-bin cmd/server/main.go
+    cmd: go build -o bin/server-bin cmd/server/main.go
 
   start:
     desc: Start the application
@@ -15,6 +20,28 @@ tasks:
     desc: Start the application in development mode
     aliases: [d]
     cmd: air
+
+  migration:generate:
+    desc: Generate migrations
+    aliases: [mg]
+    cmd: migrate create --ext sql --dir "{{.CLIENT_PATH}}/database/sqlc_pg/migration" --tz UTC {{.CLI_ARGS}}
+  migration:types:
+    desc: Generate migration types
+    aliases: [mt]
+    cmd: sqlc generate
+  migration:up:
+    desc: Run migrations
+    cmd: migrate --path="{{.CLIENT_PATH}}/database/sqlc_pg/migration" --database "$DATABASE_URL" up {{.CLI_ARGS}}
+    silent: true
+  migration:rollback:
+    desc: Rollback migrations
+    cmd: migrate --path="{{.CLIENT_PATH}}/database/sqlc_pg/migration" --database "$DATABASE_URL" down {{.CLI_ARGS}}
+    silent: true
+
+  compose:local:
+    desc: Run docker compose
+    aliases: [cl]
+    cmd: docker compose -f .docker/compose/local.yml up {{.CLI_ARGS}}
 
   mod:
     desc: Downloads and tidy Go modules
@@ -28,5 +55,4 @@ tasks:
     aliases: [l]
     sources:
       - './**/*.go'
-    cmds:
-      - golangci-lint run
+    cmd: golangci-lint run
