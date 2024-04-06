@@ -5,16 +5,24 @@ tasks:
     aliases: [b]
     cmds:
       - go build -o bin/server-bin cmd/server/main.go
+
   start:
     desc: Start the application
     aliases: [s]
     cmd: go run cmd/server/main.go
+
+  dev:
+    desc: Start the application in development mode
+    aliases: [d]
+    cmd: air
+
   mod:
     desc: Downloads and tidy Go modules
     aliases: [m]
     cmds:
       - go mod download
       - go mod tidy
+
   lint:
     desc: Beautiful linter
     aliases: [l]
