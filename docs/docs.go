@@ -22,7 +22,39 @@ const docTemplate = `{
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {}
+    "paths": {
+        "/api/v1/hello-world": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "v1",
+                    "Hello World"
+                ],
+                "summary": "Get hello world message",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/GetHelloWorldResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "GetHelloWorldResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "Hello World!"
+                }
+            }
+        }
+    }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it

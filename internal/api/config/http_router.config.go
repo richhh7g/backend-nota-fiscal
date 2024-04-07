@@ -23,6 +23,8 @@ func (c *HTTPRouterConfig) Configure() (*chi.Mux, error) {
 
 	r.Use(middleware.RequestID, middleware.RealIP, middleware.Logger, middleware.Recoverer)
 
+	route.NewHelloWorldRoutes(c.ctx, r)
+
 	route.NewDocumentationRoute(c.ctx, r)
 	return r, nil
 }
