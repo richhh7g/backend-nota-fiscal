@@ -1,8 +1,8 @@
 version: "2"
 sql:
-  - schema: "internal/infra/data/client/database/sqlc_pg/migration"
+  - schema: "internal/infra/data/database/postgres/migration"
     engine: "postgresql"
-    queries: "internal/infra/data/repository/**/*.sql"
+    queries: "internal/infra/data/database/postgres/sql/**/*.sql"
     gen:
       go:
           out: "internal/infra/data/client/database/sqlc_pg"

@@ -1,7 +1,7 @@
 version: 3
 
 vars:
-  CLIENT_PATH: internal/infra/data/client
+  DATABASE_PATH: internal/infra/data/database
 
 dotenv: ['.env', '.env.test']
 
@@ -24,18 +24,18 @@ tasks:
   migration:generate:
     desc: Generate migrations
     aliases: [mg]
-    cmd: migrate create --ext sql --dir "{{.CLIENT_PATH}}/database/sqlc_pg/migration" --tz UTC {{.CLI_ARGS}}
+    cmd: migrate create --ext sql --dir "{{.DATABASE_PATH}}/postgres/migration" --tz UTC {{.CLI_ARGS}}
   migration:types:
     desc: Generate migration types
     aliases: [mt]
     cmd: sqlc generate
   migration:up:
     desc: Run migrations
-    cmd: migrate --path="{{.CLIENT_PATH}}/database/sqlc_pg/migration" --database "$DATABASE_URL" up {{.CLI_ARGS}}
+    cmd: migrate --path="{{.DATABASE_PATH}}/postgres/migration" --database "$DATABASE_URL" up {{.CLI_ARGS}}
     silent: true
   migration:rollback:
     desc: Rollback migrations
-    cmd: migrate --path="{{.CLIENT_PATH}}/database/sqlc_pg/migration" --database "$DATABASE_URL" down {{.CLI_ARGS}}
+    cmd: migrate --path="{{.DATABASE_PATH}}/postgres/migration" --database "$DATABASE_URL" down {{.CLI_ARGS}}
     silent: true
 
   compose:local:
