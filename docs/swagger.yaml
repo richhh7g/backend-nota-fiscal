@@ -1,0 +1,33 @@
+basePath: /
+definitions:
+  GetHelloWorldResponse:
+    properties:
+      message:
+        example: Hello World!
+        type: string
+    type: object
+info:
+  contact:
+    email: richhh7g@protonmail.com
+    name: Richhh7g
+    url: https://github.com/richhh7g
+  license:
+    name: MIT
+    url: https://github.com/richhh7g/backend-nota-fiscal/blob/main/LICENSE
+  title: NFE API
+  version: 1.0.0
+paths:
+  /api/v1/hello-world:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GetHelloWorldResponse'
+      summary: Get hello world message
+      tags:
+      - v1
+      - Hello World
+swagger: "2.0"

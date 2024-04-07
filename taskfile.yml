@@ -43,6 +43,11 @@ tasks:
     aliases: [cl]
     cmd: docker compose -f .docker/compose/local.yml up {{.CLI_ARGS}}
 
+  generate:docs:
+    desc: Generate swagger docs
+    aliases: [gd]
+    cmd: swag init -g cmd/server/main.go -ot go,yaml
+
   mod:
     desc: Downloads and tidy Go modules
     aliases: [m]

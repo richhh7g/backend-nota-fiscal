@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	_ "github.com/richhh7g/mm-api-nfe/docs"
 	"github.com/richhh7g/mm-api-nfe/internal/api/config"
 	"github.com/richhh7g/mm-api-nfe/internal/infra/environment"
 )
@@ -16,6 +17,15 @@ func init() {
 	}
 }
 
+// @title NFE API
+// @version 1.0.0
+// @description
+// @contact.name Richhh7g
+// @contact.url https://github.com/richhh7g
+// @contact.email richhh7g@protonmail.com
+// @license.name MIT
+// @license.url https://github.com/richhh7g/backend-nota-fiscal/blob/main/LICENSE
+// @BasePath /
 func main() {
 	ctx := context.Background()
 
