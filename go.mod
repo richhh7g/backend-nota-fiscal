@@ -4,6 +4,7 @@ go 1.22.1
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
+	github.com/go-chi/chi/v5 v5.0.12
 	github.com/spf13/viper v1.18.2
 )
 

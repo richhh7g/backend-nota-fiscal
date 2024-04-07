@@ -2,4 +2,6 @@ package environment
 
 var envSchema EnvSchema
 
-type EnvSchema struct{}
+type EnvSchema struct {
+	PORT string `valid:"required"`
+}
