@@ -2,11 +2,10 @@ package config
 
 import (
 	"context"
-	"net/http"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/richhh7g/mm-api-nfe/internal/api/response"
+	"github.com/richhh7g/mm-api-nfe/internal/api/route"
 )
 
 type HTTPRouterConfig struct {
@@ -24,9 +23,6 @@ func (c *HTTPRouterConfig) Configure() (*chi.Mux, error) {
 
 	r.Use(middleware.RequestID, middleware.RealIP, middleware.Logger, middleware.Recoverer)
 
-	r.Get("/hello-world", func(w http.ResponseWriter, _ *http.Request) {
-		response.NewSuccess("Hello World! MM", http.StatusOK).Send(w)
-	})
-
+	route.NewDocumentationRoute(c.ctx, r)
 	return r, nil
 }
