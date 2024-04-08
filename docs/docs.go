@@ -23,21 +23,41 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/hello-world": {
-            "get": {
+        "/api/v1/nota-fiscal": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "v1",
-                    "Hello World"
+                    "Invoices"
                 ],
-                "summary": "Get hello world message",
-                "responses": {
-                    "200": {
-                        "description": "OK",
+                "summary": "Create invoice",
+                "parameters": [
+                    {
+                        "description": "Invoice",
+                        "name": "invoice",
+                        "in": "body",
+                        "required": true,
                         "schema": {
-                            "$ref": "#/definitions/GetHelloWorldResponse"
+                            "$ref": "#/definitions/CreateInvoiceBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/CreateInvoiceResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
                         }
                     }
                 }
@@ -45,12 +65,67 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "GetHelloWorldResponse": {
+        "CreateInvoiceBody": {
+            "type": "object",
+            "required": [
+                "chave",
+                "cnpj",
+                "data_emissao",
+                "data_recebimento"
+            ],
+            "properties": {
+                "chave": {
+                    "type": "string",
+                    "example": "1234567890123456789012345678901234567890123456789012345678901234"
+                },
+                "cnpj": {
+                    "type": "string",
+                    "example": "12345678901234"
+                },
+                "data_emissao": {
+                    "type": "string",
+                    "example": "2022-08-01T10:00:00Z"
+                },
+                "data_recebimento": {
+                    "type": "string",
+                    "example": "2022-08-01T10:00:00Z"
+                }
+            }
+        },
+        "CreateInvoiceResponse": {
             "type": "object",
             "properties": {
-                "message": {
+                "chave": {
                     "type": "string",
-                    "example": "Hello World!"
+                    "example": "1234567890123456789012345678901234567890123456789012345678901234"
+                },
+                "cnpj": {
+                    "type": "string",
+                    "example": "12345678901234"
+                },
+                "data_emissao": {
+                    "type": "string",
+                    "example": "2022-08-01T10:00:00Z"
+                },
+                "data_recebimento": {
+                    "type": "string",
+                    "example": "2022-08-01T10:00:00Z"
+                },
+                "id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "example": "12345678-9abc-def0-1234-56789abcdef0"
+                }
+            }
+        },
+        "ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "errors": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         }

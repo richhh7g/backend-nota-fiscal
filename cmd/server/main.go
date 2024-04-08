@@ -1,11 +1,14 @@
 package main
 
 import (
+	_ "github.com/lib/pq"
+	_ "github.com/richhh7g/mm-api-nfe/docs"
+
 	"context"
+	"database/sql"
 	"fmt"
 	"net/http"
 
-	_ "github.com/richhh7g/mm-api-nfe/docs"
 	"github.com/richhh7g/mm-api-nfe/internal/api/config"
 	"github.com/richhh7g/mm-api-nfe/internal/infra/environment"
 )
@@ -29,13 +32,25 @@ func init() {
 func main() {
 	ctx := context.Background()
 
-	port, err := environment.Get("PORT")
+	dbURL, err := environment.Get("DATABASE_URL")
 	if err != nil {
 		panic(err)
 	}
 
-	serverConfig := config.NewServerConfig(&ctx, port.(string))
+	db, err := sql.Open("postgres", dbURL.(string))
+	if err != nil {
+		panic(err)
+	}
+
+	defer db.Close()
+
+	serverConfig := config.NewServerConfig(&ctx, db)
 	router, err := serverConfig.Configure()
+	if err != nil {
+		panic(err)
+	}
+
+	port, err := environment.Get("PORT")
 	if err != nil {
 		panic(err)
 	}

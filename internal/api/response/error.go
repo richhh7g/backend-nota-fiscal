@@ -8,7 +8,7 @@ import (
 type Error struct {
 	statusCode int
 	Errors     []string `json:"errors"`
-}
+} // @name ErrorResponse
 
 func NewError(err error, status int) *Error {
 	return &Error{
