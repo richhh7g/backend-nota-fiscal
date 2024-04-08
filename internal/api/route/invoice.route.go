@@ -17,10 +17,16 @@ type InvoiceRouteImpl struct {
 }
 
 func NewInvoiceRoute(router *chi.Mux, invoiceController controller.Invoice) *InvoiceRouteImpl {
-	return &InvoiceRouteImpl{
+	invoiceRoute := &InvoiceRouteImpl{
 		router:            router,
 		invoiceController: invoiceController,
 	}
+
+	invoiceRoute.router.Route(invoiceRoute.GetPath(), func(r chi.Router) {
+		r.Post("/", invoiceRoute.CreateInvoice)
+	})
+
+	return invoiceRoute
 }
 
 func (r *InvoiceRouteImpl) GetPath() string {
@@ -28,5 +34,5 @@ func (r *InvoiceRouteImpl) GetPath() string {
 }
 
 func (r *InvoiceRouteImpl) CreateInvoice(w http.ResponseWriter, req *http.Request) {
-	r.router.Post(r.GetPath(), r.invoiceController.CreateInvoice)
+	r.invoiceController.CreateInvoice(w, req)
 }
