@@ -29,7 +29,11 @@ func (c *HTTPRouterConfig) Configure() (*chi.Mux, error) {
 
 	r.Use(middleware.RequestID, middleware.RealIP, middleware.Logger, middleware.Recoverer)
 
-	route.NewInvoiceRoute(r, controller.NewInvoice(c.ctx, invoice.NewCreateInvoiceUseCase(c.ctx, datasource.NewInvoice(c.ctx, c.db))))
+	invoiceDataSource := datasource.NewInvoice(c.ctx, c.db)
+	checkKeyExistsUseCase := invoice.NewCheckKeyExistsUseCase(c.ctx, invoiceDataSource)
+	createInvoiceUseCase := invoice.NewCreateInvoiceUseCase(c.ctx, invoiceDataSource)
+
+	route.NewInvoiceRoute(r, controller.NewInvoice(c.ctx, checkKeyExistsUseCase, createInvoiceUseCase))
 	route.NewDocumentationRoute(c.ctx, r)
 	return r, nil
 }

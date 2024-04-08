@@ -3,11 +3,16 @@ package controller
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/richhh7g/mm-api-nfe/internal/api/dto"
 	"github.com/richhh7g/mm-api-nfe/internal/api/response"
 	"github.com/richhh7g/mm-api-nfe/internal/usecase/invoice"
+)
+
+var (
+	ErrKeyAlreadyExists = errors.New("the key already exists")
 )
 
 var _ Invoice = &InvoiceImpl{}
@@ -17,25 +22,35 @@ type Invoice interface {
 }
 
 type InvoiceImpl struct {
-	ctx                  *context.Context
-	createInvoiceUseCase invoice.CreateInvoiceUseCase
+	ctx                   *context.Context
+	checkKeyExistsUseCase invoice.CheckKeyExistsUseCase
+	createInvoiceUseCase  invoice.CreateInvoiceUseCase
 }
 
-func NewInvoice(ctx *context.Context, createInvoiceUseCase invoice.CreateInvoiceUseCase) *InvoiceImpl {
+func NewInvoice(ctx *context.Context, checkKeyExistsUseCase invoice.CheckKeyExistsUseCase, createInvoiceUseCase invoice.CreateInvoiceUseCase) *InvoiceImpl {
 	return &InvoiceImpl{
-		ctx:                  ctx,
-		createInvoiceUseCase: createInvoiceUseCase,
+		ctx:                   ctx,
+		checkKeyExistsUseCase: checkKeyExistsUseCase,
+		createInvoiceUseCase:  createInvoiceUseCase,
 	}
 }
 
-func (h *InvoiceImpl) CreateInvoice(w http.ResponseWriter, r *http.Request) {
+func (c *InvoiceImpl) CreateInvoice(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
+
 	var input dto.CreateInvoiceBody
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 		response.NewError(err, http.StatusBadRequest).Send(w)
 		return
 	}
 
-	invoiceResponse, err := h.createInvoiceUseCase.Exec(&input)
+	keyAlreadyExists := c.checkKeyExistsUseCase.Exec(&input.Chave)
+	if keyAlreadyExists {
+		response.NewError(ErrKeyAlreadyExists, http.StatusConflict).Send(w)
+		return
+	}
+
+	invoiceResponse, err := c.createInvoiceUseCase.Exec(&input)
 
 	if err != nil {
 		response.NewError(err, http.StatusAccepted).Send(w)
