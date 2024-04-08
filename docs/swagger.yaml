@@ -46,6 +46,21 @@ definitions:
           type: string
         type: array
     type: object
+  GetInvoiceResponse:
+    properties:
+      chave:
+        example: "12345678901234567890123456789012345678901234"
+        type: string
+      cnpj:
+        example: "12345678901234"
+        type: string
+      data_emissao:
+        example: "2022-08-01T10:00:00Z"
+        type: string
+      data_recebimento:
+        example: "2022-08-01T10:00:00Z"
+        type: string
+    type: object
 info:
   contact:
     email: richhh7g@protonmail.com
@@ -80,6 +95,31 @@ paths:
           schema:
             $ref: '#/definitions/ErrorResponse'
       summary: Create invoice
+      tags:
+      - v1
+      - Invoices
+  /api/v1/nota-fiscal/{chave}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Chave
+        in: path
+        name: chave
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GetInvoiceResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Get invoice
       tags:
       - v1
       - Invoices

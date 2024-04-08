@@ -80,6 +80,14 @@ func (c *InvoiceImpl) CreateInvoice(w http.ResponseWriter, r *http.Request) {
 	response.NewSuccess(invoiceResponse, http.StatusCreated).Send(w)
 }
 
+// @Summary Get invoice
+// @Tags v1, Invoices
+// @Accept json
+// @Produce json
+// @Param chave path string true "Chave"
+// @Success 200 {object} GetInvoiceResponse
+// @Failure 404 {object} ErrorResponse
+// @Router /api/v1/nota-fiscal/{chave} [GET]
 func (c *InvoiceImpl) GetInvoice(w http.ResponseWriter, r *http.Request) {
 	invoiceID := chi.URLParam(r, "chave")
 

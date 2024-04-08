@@ -62,6 +62,44 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/api/v1/nota-fiscal/{chave}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "v1",
+                    "Invoices"
+                ],
+                "summary": "Get invoice",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Chave",
+                        "name": "chave",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/GetInvoiceResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -126,6 +164,27 @@ const docTemplate = `{
                     "items": {
                         "type": "string"
                     }
+                }
+            }
+        },
+        "GetInvoiceResponse": {
+            "type": "object",
+            "properties": {
+                "chave": {
+                    "type": "string",
+                    "example": "12345678901234567890123456789012345678901234"
+                },
+                "cnpj": {
+                    "type": "string",
+                    "example": "12345678901234"
+                },
+                "data_emissao": {
+                    "type": "string",
+                    "example": "2022-08-01T10:00:00Z"
+                },
+                "data_recebimento": {
+                    "type": "string",
+                    "example": "2022-08-01T10:00:00Z"
                 }
             }
         }
