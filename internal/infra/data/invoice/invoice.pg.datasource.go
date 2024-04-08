@@ -13,6 +13,7 @@ var _ InvoiceDataSource = &InvoiceDataSourceImpl{}
 type InvoiceDataSource interface {
 	CreateInvoice(invoice *entity.Invoice) (*entity.Invoice, error)
 	FindInvoiceKeyExists(key entity.Key) bool
+	FindInvoiceByKey(key entity.Key) (*entity.Invoice, error)
 }
 
 type InvoiceDataSourceImpl struct {
@@ -41,7 +42,7 @@ func (d *InvoiceDataSourceImpl) CreateInvoice(invoice *entity.Invoice) (*entity.
 
 	_, err := d.repository.CreateInvoice(*d.ctx, params)
 	if err != nil {
-		return &entity.Invoice{}, err
+		return nil, err
 	}
 
 	return invoice, nil
@@ -50,4 +51,24 @@ func (d *InvoiceDataSourceImpl) CreateInvoice(invoice *entity.Invoice) (*entity.
 func (d *InvoiceDataSourceImpl) FindInvoiceKeyExists(key entity.Key) bool {
 	_, err := d.repository.FindInvoiceKeyExists(*d.ctx, string(key))
 	return err == nil
+}
+
+func (d *InvoiceDataSourceImpl) FindInvoiceByKey(key entity.Key) (*entity.Invoice, error) {
+	invoice, err := d.repository.FindInvoiceByKey(*d.ctx, string(key))
+	if err != nil {
+		return nil, err
+	}
+
+	id, err := entity.ParseID(invoice.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &entity.Invoice{
+		ID:         id,
+		IssuedAt:   invoice.EmissaoEm.String(),
+		ReceivedAt: invoice.RecebidoEm.String(),
+		Key:        entity.Key(invoice.Chave),
+		CNPJ:       entity.CNPJ(invoice.Cnpj),
+	}, nil
 }

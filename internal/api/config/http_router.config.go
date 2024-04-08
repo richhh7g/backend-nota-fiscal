@@ -30,10 +30,13 @@ func (c *HTTPRouterConfig) Configure() (*chi.Mux, error) {
 	r.Use(middleware.RequestID, middleware.RealIP, middleware.Logger, middleware.Recoverer)
 
 	invoiceDataSource := datasource.NewInvoice(c.ctx, c.db)
-	checkKeyExistsUseCase := invoice.NewCheckKeyExistsUseCase(c.ctx, invoiceDataSource)
-	createInvoiceUseCase := invoice.NewCreateInvoiceUseCase(c.ctx, invoiceDataSource)
+	route.NewInvoiceRoute(r, controller.NewInvoice(&controller.InvoiceParams{
+		Ctx:                    c.ctx,
+		CheckKeyExistsUseCase:  invoice.NewCheckKeyExistsUseCase(c.ctx, invoiceDataSource),
+		CreateInvoiceUseCase:   invoice.NewCreateInvoiceUseCase(c.ctx, invoiceDataSource),
+		GetInvoiceByKeyUseCase: invoice.NewGetInvoiceByKeyUseCase(c.ctx, invoiceDataSource),
+	}))
 
-	route.NewInvoiceRoute(r, controller.NewInvoice(c.ctx, checkKeyExistsUseCase, createInvoiceUseCase))
 	route.NewDocumentationRoute(c.ctx, r)
 	return r, nil
 }
