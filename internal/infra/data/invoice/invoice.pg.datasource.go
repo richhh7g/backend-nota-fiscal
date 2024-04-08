@@ -12,6 +12,7 @@ var _ InvoiceDataSource = &InvoiceDataSourceImpl{}
 
 type InvoiceDataSource interface {
 	CreateInvoice(invoice *entity.Invoice) (*entity.Invoice, error)
+	FindInvoiceKeyExists(key entity.Key) bool
 }
 
 type InvoiceDataSourceImpl struct {
@@ -44,4 +45,9 @@ func (d *InvoiceDataSourceImpl) CreateInvoice(invoice *entity.Invoice) (*entity.
 	}
 
 	return invoice, nil
+}
+
+func (d *InvoiceDataSourceImpl) FindInvoiceKeyExists(key entity.Key) bool {
+	_, err := d.repository.FindInvoiceKeyExists(*d.ctx, string(key))
+	return err == nil
 }
