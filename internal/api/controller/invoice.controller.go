@@ -35,6 +35,14 @@ func NewInvoice(ctx *context.Context, checkKeyExistsUseCase invoice.CheckKeyExis
 	}
 }
 
+// @Summary Create invoice
+// @Tags v1, Invoices
+// @Accept json
+// @Produce json
+// @Param invoice body CreateInvoiceBody true "Invoice"
+// @Success 201 {object} CreateInvoiceResponse
+// @Failure 409 {object} response.Error
+// @Router /api/v1/nota-fiscal [POST]
 func (c *InvoiceImpl) CreateInvoice(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 

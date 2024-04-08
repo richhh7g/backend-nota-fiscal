@@ -1,10 +1,50 @@
 basePath: /
 definitions:
-  GetHelloWorldResponse:
+  CreateInvoiceBody:
     properties:
-      message:
-        example: Hello World!
+      chave:
+        example: "1234567890123456789012345678901234567890123456789012345678901234"
         type: string
+      cnpj:
+        example: "12345678901234"
+        type: string
+      data_emissao:
+        example: "2022-08-01T10:00:00Z"
+        type: string
+      data_recebimento:
+        example: "2022-08-01T10:00:00Z"
+        type: string
+    required:
+    - chave
+    - cnpj
+    - data_emissao
+    - data_recebimento
+    type: object
+  CreateInvoiceResponse:
+    properties:
+      chave:
+        example: "1234567890123456789012345678901234567890123456789012345678901234"
+        type: string
+      cnpj:
+        example: "12345678901234"
+        type: string
+      data_emissao:
+        example: "2022-08-01T10:00:00Z"
+        type: string
+      data_recebimento:
+        example: "2022-08-01T10:00:00Z"
+        type: string
+      id:
+        example: 12345678-9abc-def0-1234-56789abcdef0
+        format: uuid
+        type: string
+    type: object
+  response.Error:
+    properties:
+      errors:
+        items:
+          type: string
+        type: array
     type: object
 info:
   contact:
@@ -17,17 +57,30 @@ info:
   title: NFE API
   version: 1.0.0
 paths:
-  /api/v1/hello-world:
-    get:
+  /api/v1/nota-fiscal:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Invoice
+        in: body
+        name: invoice
+        required: true
+        schema:
+          $ref: '#/definitions/CreateInvoiceBody'
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Created
           schema:
-            $ref: '#/definitions/GetHelloWorldResponse'
-      summary: Get hello world message
+            $ref: '#/definitions/CreateInvoiceResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Create invoice
       tags:
       - v1
-      - Hello World
+      - Invoices
 swagger: "2.0"
