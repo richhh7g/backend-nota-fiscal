@@ -39,7 +39,7 @@ definitions:
         format: uuid
         type: string
     type: object
-  response.Error:
+  ErrorResponse:
     properties:
       errors:
         items:
@@ -78,7 +78,7 @@ paths:
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/response.Error'
+            $ref: '#/definitions/ErrorResponse'
       summary: Create invoice
       tags:
       - v1

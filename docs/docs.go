@@ -57,7 +57,7 @@ const docTemplate = `{
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/response.Error"
+                            "$ref": "#/definitions/ErrorResponse"
                         }
                     }
                 }
@@ -118,7 +118,7 @@ const docTemplate = `{
                 }
             }
         },
-        "response.Error": {
+        "ErrorResponse": {
             "type": "object",
             "properties": {
                 "errors": {
