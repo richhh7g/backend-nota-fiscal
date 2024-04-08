@@ -42,6 +42,24 @@ func (q *Queries) CreateInvoice(ctx context.Context, arg CreateInvoiceParams) (N
 	return i, err
 }
 
+const findInvoiceByKey = `-- name: FindInvoiceByKey :one
+SELECT id, created_at, emissao_em, recebido_em, cnpj, chave FROM notas_fiscais WHERE chave = $1
+`
+
+func (q *Queries) FindInvoiceByKey(ctx context.Context, chave string) (NotasFiscais, error) {
+	row := q.db.QueryRowContext(ctx, findInvoiceByKey, chave)
+	var i NotasFiscais
+	err := row.Scan(
+		&i.ID,
+		&i.CreatedAt,
+		&i.EmissaoEm,
+		&i.RecebidoEm,
+		&i.Cnpj,
+		&i.Chave,
+	)
+	return i, err
+}
+
 const findInvoiceKeyExists = `-- name: FindInvoiceKeyExists :one
 SELECT id FROM notas_fiscais WHERE chave = $1
 `

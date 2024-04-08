@@ -3,3 +3,6 @@ INSERT INTO notas_fiscais(id, emissao_em, recebido_em, cnpj, chave) VALUES ($1, 
 
 -- name: FindInvoiceKeyExists :one
 SELECT id FROM notas_fiscais WHERE chave = $1;
+
+-- name: FindInvoiceByKey :one
+SELECT * FROM notas_fiscais WHERE chave = $1;
