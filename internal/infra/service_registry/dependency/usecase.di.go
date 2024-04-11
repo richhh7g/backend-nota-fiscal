@@ -19,3 +19,8 @@ var GetInvoiceByKeyUseCaseDI = wire.NewSet(
 	invoice.NewGetInvoiceByKeyUseCase,
 	wire.Bind(new(invoice.GetInvoiceByKeyUseCase), new(*invoice.GetInvoiceByKeyUseCaseImpl)),
 )
+
+var CheckCNPJUseCaseDI = wire.NewSet(
+	invoice.NewCheckCNPJUseCase,
+	wire.Bind(new(invoice.CheckCNPJUseCase), new(*invoice.CheckCNPJUseCaseImpl)),
+)

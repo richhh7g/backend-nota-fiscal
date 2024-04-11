@@ -12,19 +12,26 @@ import (
 	"github.com/richhh7g/mm-api-nfe/internal/api/controller"
 	"github.com/richhh7g/mm-api-nfe/internal/api/route"
 	"github.com/richhh7g/mm-api-nfe/internal/infra/data/client/database/sqlc_pg"
-	"github.com/richhh7g/mm-api-nfe/internal/infra/data/invoice"
-	invoice2 "github.com/richhh7g/mm-api-nfe/internal/usecase/invoice"
+	"github.com/richhh7g/mm-api-nfe/internal/infra/data/client/http/document_validate"
+	"github.com/richhh7g/mm-api-nfe/internal/infra/data/document"
+	invoice2 "github.com/richhh7g/mm-api-nfe/internal/infra/data/invoice"
+	"github.com/richhh7g/mm-api-nfe/internal/usecase/invoice"
+	"net/http"
 )
 
 // Injectors from injector.go:
 
-func NewInvoiceRoute(ctx *context.Context, router *chi.Mux, db sqlc_pg.DBTX) *route.InvoiceRouteImpl {
-	invoiceDataSourceImpl := invoice.NewInvoice(ctx, db)
-	checkKeyExistsUseCaseImpl := invoice2.NewCheckKeyExistsUseCase(ctx, invoiceDataSourceImpl)
-	createInvoiceUseCaseImpl := invoice2.NewCreateInvoiceUseCase(ctx, invoiceDataSourceImpl)
-	getInvoiceByKeyUseCaseImpl := invoice2.NewGetInvoiceByKeyUseCase(ctx, invoiceDataSourceImpl)
+func NewInvoiceRoute(ctx context.Context, router *chi.Mux, db sqlc_pg.DBTX, httpClient *http.Client) *route.InvoiceRouteImpl {
+	clientImpl := documentValidate.NewClient(ctx, httpClient)
+	validateDataSourceImpl := document.NewValidateDataSource(ctx, clientImpl)
+	checkCNPJUseCaseImpl := invoice.NewCheckCNPJUseCase(ctx, validateDataSourceImpl)
+	invoiceDataSourceImpl := invoice2.NewInvoice(ctx, db)
+	checkKeyExistsUseCaseImpl := invoice.NewCheckKeyExistsUseCase(ctx, invoiceDataSourceImpl)
+	createInvoiceUseCaseImpl := invoice.NewCreateInvoiceUseCase(ctx, invoiceDataSourceImpl)
+	getInvoiceByKeyUseCaseImpl := invoice.NewGetInvoiceByKeyUseCase(ctx, invoiceDataSourceImpl)
 	invoiceParams := &controller.InvoiceParams{
 		Ctx:                    ctx,
+		CheckCNPJUseCase:       checkCNPJUseCaseImpl,
 		CheckKeyExistsUseCase:  checkKeyExistsUseCaseImpl,
 		CreateInvoiceUseCase:   createInvoiceUseCaseImpl,
 		GetInvoiceByKeyUseCase: getInvoiceByKeyUseCaseImpl,
