@@ -57,7 +57,9 @@ func NewInvoice(input *InvoiceParams) *InvoiceImpl {
 // @Produce json
 // @Param invoice body CreateInvoiceBody true "Invoice"
 // @Success 201 {object} CreateInvoiceResponse
+// @Failure 403 {object} ErrorResponse
 // @Failure 409 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
 // @Router /api/v1/nota-fiscal [POST]
 func (c *InvoiceImpl) CreateInvoice(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
