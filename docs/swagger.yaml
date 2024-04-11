@@ -1,0 +1,134 @@
+basePath: /
+definitions:
+  CreateInvoiceBody:
+    properties:
+      chave:
+        example: "12345678901234567890123456789012345678901234"
+        type: string
+      cnpj:
+        example: "12345678901234"
+        type: string
+      data_emissao:
+        example: "2022-08-01T10:00:00Z"
+        type: string
+      data_recebimento:
+        example: "2022-08-01T10:00:00Z"
+        type: string
+    required:
+    - chave
+    - cnpj
+    - data_emissao
+    - data_recebimento
+    type: object
+  CreateInvoiceResponse:
+    properties:
+      chave:
+        example: "12345678901234567890123456789012345678901234"
+        type: string
+      cnpj:
+        example: "12345678901234"
+        type: string
+      data_emissao:
+        example: "2022-08-01T10:00:00Z"
+        type: string
+      data_recebimento:
+        example: "2022-08-01T10:00:00Z"
+        type: string
+      id:
+        example: 12345678-9abc-def0-1234-56789abcdef0
+        format: uuid
+        type: string
+    type: object
+  ErrorResponse:
+    properties:
+      errors:
+        items:
+          type: string
+        type: array
+    type: object
+  GetInvoiceResponse:
+    properties:
+      chave:
+        example: "12345678901234567890123456789012345678901234"
+        type: string
+      cnpj:
+        example: "12345678901234"
+        type: string
+      data_emissao:
+        example: "2022-08-01T10:00:00Z"
+        type: string
+      data_recebimento:
+        example: "2022-08-01T10:00:00Z"
+        type: string
+    type: object
+info:
+  contact:
+    email: richhh7g@protonmail.com
+    name: Richhh7g
+    url: https://github.com/richhh7g
+  license:
+    name: MIT
+    url: https://github.com/richhh7g/backend-nota-fiscal/blob/main/LICENSE
+  title: NFE API
+  version: 1.0.0
+paths:
+  /api/v1/nota-fiscal:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Invoice
+        in: body
+        name: invoice
+        required: true
+        schema:
+          $ref: '#/definitions/CreateInvoiceBody'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/CreateInvoiceResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Create invoice
+      tags:
+      - v1
+      - Invoices
+  /api/v1/nota-fiscal/{chave}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Chave
+        in: path
+        name: chave
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GetInvoiceResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Get invoice
+      tags:
+      - v1
+      - Invoices
+swagger: "2.0"

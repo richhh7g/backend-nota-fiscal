@@ -1,0 +1,67 @@
+version: 3
+
+vars:
+  DATABASE_PATH: internal/infra/data/database
+
+dotenv: ['.env', '.env.test']
+
+tasks:
+  build:
+    desc: Build the application
+    aliases: [b]
+    cmd: go build -o bin/server-bin cmd/server/main.go
+
+  start:
+    desc: Start the application
+    aliases: [s]
+    cmd: go run cmd/server/main.go
+
+  dev:
+    desc: Start the application in development mode
+    aliases: [d]
+    cmd: air
+
+  migration:generate:
+    desc: Generate migrations
+    aliases: [mg]
+    cmd: migrate create --ext sql --dir "{{.DATABASE_PATH}}/postgres/migration" --tz UTC {{.CLI_ARGS}}
+  migration:types:
+    desc: Generate migration types
+    aliases: [mt]
+    cmd: sqlc generate
+  migration:up:
+    desc: Run migrations
+    cmd: migrate --path="{{.DATABASE_PATH}}/postgres/migration" --database "$DATABASE_URL" up {{.CLI_ARGS}}
+    silent: true
+  migration:rollback:
+    desc: Rollback migrations
+    cmd: migrate --path="{{.DATABASE_PATH}}/postgres/migration" --database "$DATABASE_URL" down {{.CLI_ARGS}}
+    silent: true
+
+  compose:local:
+    desc: Run docker compose
+    aliases: [cl]
+    cmd: docker compose -f .docker/compose/local.yml up {{.CLI_ARGS}}
+
+  generate:wire:
+    desc: Generate wire dependencies
+    aliases: [gw]
+    cmd: wire gen --output_file_prefix injector. internal/infra/service_registry/injector.go
+  generate:docs:
+    desc: Generate swagger docs
+    aliases: [gd]
+    cmd: swag init -g cmd/server/main.go -ot go,yaml
+
+  mod:
+    desc: Downloads and tidy Go modules
+    aliases: [m]
+    cmds:
+      - go mod download
+      - go mod tidy
+
+  lint:
+    desc: Beautiful linter
+    aliases: [l]
+    sources:
+      - './**/*.go'
+    cmd: golangci-lint run
