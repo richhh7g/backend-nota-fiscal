@@ -44,7 +44,7 @@ func main() {
 
 	defer db.Close()
 
-	serverConfig := config.NewServerConfig(&ctx, db)
+	serverConfig := config.NewServerConfig(ctx, db)
 	router, err := serverConfig.Configure()
 	if err != nil {
 		panic(err)

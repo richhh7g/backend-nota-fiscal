@@ -8,11 +8,11 @@ import (
 )
 
 type ServerConfig struct {
-	ctx *context.Context
+	ctx context.Context
 	db  *sql.DB
 }
 
-func NewServerConfig(ctx *context.Context, db *sql.DB) ConfigBase[*chi.Mux] {
+func NewServerConfig(ctx context.Context, db *sql.DB) ConfigBase[*chi.Mux] {
 	return &ServerConfig{
 		ctx: ctx,
 		db:  db,
