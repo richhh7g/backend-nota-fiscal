@@ -15,11 +15,11 @@ type GetInvoiceByKeyUseCase interface {
 }
 
 type GetInvoiceByKeyUseCaseImpl struct {
-	ctx        *context.Context
+	ctx        context.Context
 	datasource invoice.InvoiceDataSource
 }
 
-func NewGetInvoiceByKeyUseCase(ctx *context.Context, datasource invoice.InvoiceDataSource) *GetInvoiceByKeyUseCaseImpl {
+func NewGetInvoiceByKeyUseCase(ctx context.Context, datasource invoice.InvoiceDataSource) *GetInvoiceByKeyUseCaseImpl {
 	return &GetInvoiceByKeyUseCaseImpl{
 		ctx:        ctx,
 		datasource: datasource,

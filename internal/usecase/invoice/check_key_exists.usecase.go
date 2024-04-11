@@ -14,11 +14,11 @@ type CheckKeyExistsUseCase interface {
 }
 
 type CheckKeyExistsUseCaseImpl struct {
-	ctx        *context.Context
+	ctx        context.Context
 	datasource invoice.InvoiceDataSource
 }
 
-func NewCheckKeyExistsUseCase(ctx *context.Context, datasource invoice.InvoiceDataSource) *CheckKeyExistsUseCaseImpl {
+func NewCheckKeyExistsUseCase(ctx context.Context, datasource invoice.InvoiceDataSource) *CheckKeyExistsUseCaseImpl {
 	return &CheckKeyExistsUseCaseImpl{
 		ctx:        ctx,
 		datasource: datasource,

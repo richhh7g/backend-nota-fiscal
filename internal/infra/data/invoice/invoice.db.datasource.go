@@ -17,11 +17,11 @@ type InvoiceDataSource interface {
 }
 
 type InvoiceDataSourceImpl struct {
-	ctx        *context.Context
+	ctx        context.Context
 	repository *sqlc_pg.Queries
 }
 
-func NewInvoice(ctx *context.Context, client sqlc_pg.DBTX) *InvoiceDataSourceImpl {
+func NewInvoice(ctx context.Context, client sqlc_pg.DBTX) *InvoiceDataSourceImpl {
 	return &InvoiceDataSourceImpl{
 		ctx:        ctx,
 		repository: sqlc_pg.New(client),
@@ -40,7 +40,7 @@ func (d *InvoiceDataSourceImpl) CreateInvoice(invoice *entity.Invoice) (*entity.
 		RecebidoEm: receivedAt,
 	}
 
-	_, err := d.repository.CreateInvoice(*d.ctx, params)
+	_, err := d.repository.CreateInvoice(d.ctx, params)
 	if err != nil {
 		return nil, err
 	}
@@ -49,12 +49,12 @@ func (d *InvoiceDataSourceImpl) CreateInvoice(invoice *entity.Invoice) (*entity.
 }
 
 func (d *InvoiceDataSourceImpl) FindInvoiceKeyExists(key entity.Key) bool {
-	_, err := d.repository.FindInvoiceKeyExists(*d.ctx, string(key))
+	_, err := d.repository.FindInvoiceKeyExists(d.ctx, string(key))
 	return err == nil
 }
 
 func (d *InvoiceDataSourceImpl) FindInvoiceByKey(key entity.Key) (*entity.Invoice, error) {
-	invoice, err := d.repository.FindInvoiceByKey(*d.ctx, string(key))
+	invoice, err := d.repository.FindInvoiceByKey(d.ctx, string(key))
 	if err != nil {
 		return nil, err
 	}
