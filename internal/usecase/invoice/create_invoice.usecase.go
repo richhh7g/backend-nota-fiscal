@@ -15,11 +15,11 @@ type CreateInvoiceUseCase interface {
 }
 
 type CreateInvoiceUseCaseImpl struct {
-	ctx        *context.Context
+	ctx        context.Context
 	datasource invoice.InvoiceDataSource
 }
 
-func NewCreateInvoiceUseCase(ctx *context.Context, datasource invoice.InvoiceDataSource) *CreateInvoiceUseCaseImpl {
+func NewCreateInvoiceUseCase(ctx context.Context, datasource invoice.InvoiceDataSource) *CreateInvoiceUseCaseImpl {
 	return &CreateInvoiceUseCaseImpl{
 		ctx:        ctx,
 		datasource: datasource,

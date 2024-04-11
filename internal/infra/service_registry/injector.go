@@ -5,6 +5,7 @@ package serviceRegistry
 
 import (
 	"context"
+	"net/http"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/google/wire"
@@ -13,8 +14,8 @@ import (
 	"github.com/richhh7g/mm-api-nfe/internal/infra/service_registry/dependency"
 )
 
-func NewInvoiceRoute(ctx *context.Context, router *chi.Mux, db sqlc_pg.DBTX) *route.InvoiceRouteImpl {
-	wire.Build(dependency.InvoiceRouteDI, dependency.DataSourceSet, dependency.CheckKeyExistsUseCaseDI, dependency.CreateInvoiceUseCaseDI, dependency.GetInvoiceByKeyUseCaseDI, dependency.InvoiceControllerDI)
+func NewInvoiceRoute(ctx context.Context, router *chi.Mux, db sqlc_pg.DBTX, httpClient *http.Client) *route.InvoiceRouteImpl {
+	wire.Build(dependency.InvoiceRouteDI, dependency.DocumentValidateClientDI, dependency.InvoiceDataSourceDI, dependency.DocumentValidateDataSourceDI, dependency.CheckCNPJUseCaseDI, dependency.CheckKeyExistsUseCaseDI, dependency.CreateInvoiceUseCaseDI, dependency.GetInvoiceByKeyUseCaseDI, dependency.InvoiceControllerDI)
 
 	return &route.InvoiceRouteImpl{}
 }

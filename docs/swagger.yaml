@@ -3,7 +3,7 @@ definitions:
   CreateInvoiceBody:
     properties:
       chave:
-        example: "1234567890123456789012345678901234567890123456789012345678901234"
+        example: "12345678901234567890123456789012345678901234"
         type: string
       cnpj:
         example: "12345678901234"
@@ -23,7 +23,7 @@ definitions:
   CreateInvoiceResponse:
     properties:
       chave:
-        example: "1234567890123456789012345678901234567890123456789012345678901234"
+        example: "12345678901234567890123456789012345678901234"
         type: string
       cnpj:
         example: "12345678901234"
@@ -90,8 +90,16 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/CreateInvoiceResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorResponse'
         "409":
           description: Conflict
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResponse'
       summary: Create invoice

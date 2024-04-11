@@ -54,8 +54,20 @@ const docTemplate = `{
                             "$ref": "#/definitions/CreateInvoiceResponse"
                         }
                     },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
                     "409": {
                         "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/ErrorResponse"
                         }
@@ -114,7 +126,7 @@ const docTemplate = `{
             "properties": {
                 "chave": {
                     "type": "string",
-                    "example": "1234567890123456789012345678901234567890123456789012345678901234"
+                    "example": "12345678901234567890123456789012345678901234"
                 },
                 "cnpj": {
                     "type": "string",
@@ -135,7 +147,7 @@ const docTemplate = `{
             "properties": {
                 "chave": {
                     "type": "string",
-                    "example": "1234567890123456789012345678901234567890123456789012345678901234"
+                    "example": "12345678901234567890123456789012345678901234"
                 },
                 "cnpj": {
                     "type": "string",

@@ -3,6 +3,7 @@ package config
 import (
 	"context"
 	"database/sql"
+	"net/http"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -11,23 +12,23 @@ import (
 )
 
 type HTTPRouterConfig struct {
-	ctx *context.Context
 	db  *sql.DB
+	ctx context.Context
 }
 
-func NewHTTPRouterConfig(ctx *context.Context, db *sql.DB) ConfigBase[*chi.Mux] {
+func NewHTTPRouterConfig(ctx context.Context, db *sql.DB) ConfigBase[*chi.Mux] {
 	return &HTTPRouterConfig{
-		ctx: ctx,
 		db:  db,
+		ctx: ctx,
 	}
 }
 
 func (c *HTTPRouterConfig) Configure() (*chi.Mux, error) {
 	r := chi.NewRouter()
 
-	r.Use(middleware.RequestID, middleware.RealIP, middleware.Logger, middleware.Recoverer)
+	r.Use(middleware.RequestID, middleware.RealIP, middleware.Recoverer)
 
-	serviceRegistry.NewInvoiceRoute(c.ctx, r, c.db)
+	serviceRegistry.NewInvoiceRoute(c.ctx, r, c.db, http.DefaultClient)
 	route.NewDocumentationRoute(c.ctx, r)
 	return r, nil
 }

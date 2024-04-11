@@ -13,6 +13,7 @@ import (
 )
 
 var (
+	ErrCNPJInvalid      = errors.New("the cnpj is invalid")
 	ErrKeyAlreadyExists = errors.New("the key already exists")
 	ErrKeyNotFound      = errors.New("the key not found")
 )
@@ -25,14 +26,16 @@ type Invoice interface {
 }
 
 type InvoiceParams struct {
-	Ctx                    *context.Context
+	Ctx                    context.Context
+	CheckCNPJUseCase       invoice.CheckCNPJUseCase
 	CheckKeyExistsUseCase  invoice.CheckKeyExistsUseCase
 	CreateInvoiceUseCase   invoice.CreateInvoiceUseCase
 	GetInvoiceByKeyUseCase invoice.GetInvoiceByKeyUseCase
 }
 
 type InvoiceImpl struct {
-	ctx                    *context.Context
+	ctx                    context.Context
+	checkCNPJUseCase       invoice.CheckCNPJUseCase
 	checkKeyExistsUseCase  invoice.CheckKeyExistsUseCase
 	createInvoiceUseCase   invoice.CreateInvoiceUseCase
 	getInvoiceByKeyUseCase invoice.GetInvoiceByKeyUseCase
@@ -41,6 +44,7 @@ type InvoiceImpl struct {
 func NewInvoice(input *InvoiceParams) *InvoiceImpl {
 	return &InvoiceImpl{
 		ctx:                    input.Ctx,
+		checkCNPJUseCase:       input.CheckCNPJUseCase,
 		checkKeyExistsUseCase:  input.CheckKeyExistsUseCase,
 		createInvoiceUseCase:   input.CreateInvoiceUseCase,
 		getInvoiceByKeyUseCase: input.GetInvoiceByKeyUseCase,
@@ -53,7 +57,9 @@ func NewInvoice(input *InvoiceParams) *InvoiceImpl {
 // @Produce json
 // @Param invoice body CreateInvoiceBody true "Invoice"
 // @Success 201 {object} CreateInvoiceResponse
+// @Failure 403 {object} ErrorResponse
 // @Failure 409 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
 // @Router /api/v1/nota-fiscal [POST]
 func (c *InvoiceImpl) CreateInvoice(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
@@ -64,6 +70,12 @@ func (c *InvoiceImpl) CreateInvoice(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	isValidCNPJ := c.checkCNPJUseCase.Exec(input.Cnpj)
+	if !isValidCNPJ {
+		response.NewError(ErrCNPJInvalid, http.StatusForbidden).Send(w)
+		return
+	}
+
 	keyAlreadyExists := c.checkKeyExistsUseCase.Exec(&input.Chave)
 	if keyAlreadyExists {
 		response.NewError(ErrKeyAlreadyExists, http.StatusConflict).Send(w)
@@ -71,9 +83,8 @@ func (c *InvoiceImpl) CreateInvoice(w http.ResponseWriter, r *http.Request) {
 	}
 
 	invoiceResponse, err := c.createInvoiceUseCase.Exec(&input)
-
 	if err != nil {
-		response.NewError(err, http.StatusAccepted).Send(w)
+		response.NewError(err, http.StatusInternalServerError).Send(w)
 		return
 	}
 
