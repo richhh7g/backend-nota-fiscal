@@ -43,6 +43,10 @@ tasks:
     aliases: [cl]
     cmd: docker compose -f .docker/compose/local.yml up {{.CLI_ARGS}}
 
+  generate:wire:
+    desc: Generate wire dependencies
+    aliases: [gw]
+    cmd: wire gen --output_file_prefix injector. internal/infra/service_registry/injector.go
   generate:docs:
     desc: Generate swagger docs
     aliases: [gd]
